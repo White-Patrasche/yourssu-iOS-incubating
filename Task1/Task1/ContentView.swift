@@ -6,11 +6,59 @@
 //
 
 import SwiftUI
+import Combine
+import Foundation
 
 struct ContentView: View {
-    @State private var firstNumber = ""
-    @State private var secondNumber = ""
-    @State private var resultString = "버튼을 눌러주세요!"
+    @StateObject var viewModel = CalculatorViewModel()
+    
+    var body: some View {
+        CalculatorView(viewModel : viewModel)
+    }
+}
+
+struct CalculatorView: View {
+    @ObservedObject var viewModel: CalculatorViewModel
+    
+    func CalButton( text:String,  action:@escaping () -> Void) -> some View{
+        return Button(action: action) {
+            Text(text)
+                .font(.body)
+                .foregroundColor(.white)
+                .padding()
+                .frame(width: 300)
+                .background(RoundedRectangle(cornerRadius: 30).fill(Color.teal))
+        }
+    }
+    
+    var body: some View {
+        VStack(spacing: 20) {
+            VStack(spacing: 10) {
+                TextField("첫번째 숫자를 입력해주세요", text: $viewModel.firstNumber)
+                    .padding()
+                    .background(RoundedRectangle(cornerRadius: 30).fill(Color.gray.opacity(0.1)))
+                    .frame(width: 300)
+                    .shadow(color: Color.black.opacity(0.3), radius: 5, x: 0, y: 2)
+                TextField("두번째 숫자를 입력해주세요", text: $viewModel.secondNumber)
+                    .padding()
+                    .background(RoundedRectangle(cornerRadius: 30).fill(Color.gray.opacity(0.1)))
+                    .frame(width: 300)
+            }
+            Text(viewModel.resultString)
+            VStack(spacing: 10) {
+                CalButton(text: "더하기", action: viewModel.add)
+                CalButton(text: "빼기", action: viewModel.sub)
+                CalButton(text: "곱하기", action: viewModel.multi)
+                CalButton(text: "나누기", action: viewModel.div)
+            }
+        }
+    }
+}
+
+class CalculatorViewModel: ObservableObject {
+    @Published var firstNumber = ""
+    @Published var secondNumber = ""
+    @Published var resultString = "버튼을 눌러주세요!"
     
     func validInput()-> Bool {
         if(firstNumber == "" || secondNumber == "") {
@@ -46,7 +94,13 @@ struct ContentView: View {
         }
         let first =  Int(firstNumber) ?? 0
         let second = Int(secondNumber) ?? 0
-        resultString = "\(first) * \(second) = \(first * second)"
+        let result = UInt64(first) * UInt64(second)
+        if (result <= UInt64(Int.max)) {
+            resultString = "\(first) * \(second) = \(first * second)"
+        }
+        else {
+            resultString = "계산 결과가 int형의 범위를 초과합니다."
+        }
     }
     func div() {
         if(!validInput()) {
@@ -59,45 +113,6 @@ struct ContentView: View {
             return
         }
         resultString = "\(first) / \(second) = \(first/second)"
-    }
-    
-    var body: some View {
-        VStack(spacing: 20) {
-            VStack(spacing: 10) {
-                TextField("첫번째 숫자를 입력해주세요", text: $firstNumber)
-                    .padding()
-                    .background(RoundedRectangle(cornerRadius: 30).fill(Color.gray.opacity(0.1)))
-                    .frame(width: 300)
-                    .shadow(color: Color.black.opacity(0.3), radius: 5, x: 0, y: 2)
-                TextField("두번째 숫자를 입력해주세요", text: $secondNumber)
-                    .padding()
-                    .background(RoundedRectangle(cornerRadius: 30).fill(Color.gray.opacity(0.1)))
-                    .frame(width: 300)
-            }
-            Text(resultString)
-            VStack(spacing: 10) {
-                CalButton(text: "더하기", action: add)
-                CalButton(text: "빼기", action: sub)
-                CalButton(text: "곱하기", action: multi)
-                CalButton(text: "나누기", action: div)
-            }
-        }
-    }
-}
-
-struct CalButton:View {
-    let text:String
-    let action: () -> Void
-    
-    var body: some View {
-        Button(action: action) {
-            Text(text)
-                .font(.body)
-                .foregroundColor(.white)
-                .padding()
-                .frame(width: 300)
-                .background(RoundedRectangle(cornerRadius: 30).fill(Color.teal))
-        }
     }
 }
 

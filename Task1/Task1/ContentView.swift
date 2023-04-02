@@ -10,9 +10,9 @@ import Combine
 import Foundation
 
 struct ContentView: View {
-    @StateObject var viewModel = CalculatorViewModel()
-    
     var body: some View {
+        let calculatorUseCase = CalculatorUseCase()
+        let viewModel = CalculatorViewModel(calculatorUseCase: calculatorUseCase)
         CalculatorView(viewModel : viewModel)
     }
 }
@@ -55,10 +55,35 @@ struct CalculatorView: View {
     }
 }
 
+class CalculatorUseCase {
+    func add(first: Int, second: Int) -> Int {
+        return first + second
+    }
+    
+    func sub(first: Int, second: Int) -> Int {
+        return first - second
+    }
+    
+    func multi(first: Int, second: Int) -> Int {
+        return first * second
+    }
+    
+    func div(first: Int, second: Int) -> Int {
+        return first / second
+    }
+}
+
+
 class CalculatorViewModel: ObservableObject {
     @Published var firstNumber = ""
     @Published var secondNumber = ""
     @Published var resultString = "버튼을 눌러주세요!"
+    
+    var calculatorUseCase: CalculatorUseCase
+    
+    init(calculatorUseCase: CalculatorUseCase) {
+        self.calculatorUseCase = calculatorUseCase
+    }
     
     func validInput()-> Bool {
         if(firstNumber == "" || secondNumber == "") {
@@ -73,46 +98,42 @@ class CalculatorViewModel: ObservableObject {
     }
     
     func add() {
-        if(!validInput()) {
-            return
+        if validInput() {
+            let first =  Int(firstNumber) ?? 0
+            let second = Int(secondNumber) ?? 0
+            let result = calculatorUseCase.add(first: first, second: second)
+            resultString = "\(first) + \(second) = \(result)"
         }
-        let first =  Int(firstNumber) ?? 0
-        let second = Int(secondNumber) ?? 0
-        resultString = "\(first) + \(second) = \(first + second)"
     }
+    
     func sub() {
-        if(!validInput()) {
-            return
+        if validInput() {
+            let first =  Int(firstNumber) ?? 0
+            let second = Int(secondNumber) ?? 0
+            let result = calculatorUseCase.sub(first: first, second: second)
+            resultString = "\(first) - \(second) = \(result)"
         }
-        let first =  Int(firstNumber) ?? 0
-        let second = Int(secondNumber) ?? 0
-        resultString = "\(first) - \(second) = \(first - second)"
+        
     }
     func multi() {
-        if(!validInput()) {
-            return
-        }
-        let first =  Int(firstNumber) ?? 0
-        let second = Int(secondNumber) ?? 0
-        let result = UInt64(first) * UInt64(second)
-        if (result <= UInt64(Int.max)) {
-            resultString = "\(first) * \(second) = \(first * second)"
-        }
-        else {
-            resultString = "계산 결과가 int형의 범위를 초과합니다."
+        if validInput() {
+            let first =  Int(firstNumber) ?? 0
+            let second = Int(secondNumber) ?? 0
+            let result = calculatorUseCase.multi(first: first, second: second)
+            resultString = "\(first) * \(second) = \(result)"
         }
     }
     func div() {
-        if(!validInput()) {
-            return
+        if validInput() {
+            let first =  Int(firstNumber) ?? 0
+            let second = Int(secondNumber) ?? 0
+            if(second == 0) {
+                resultString = "0으로 나눌 수 없습니다!"
+                return
+            }
+            let result = calculatorUseCase.div(first: first, second: second)
+            resultString = "\(first) / \(second) = \(result)"
         }
-        let first =  Int(firstNumber) ?? 0
-        let second = Int(secondNumber) ?? 0
-        if(second == 0) {
-            resultString = "0으로 나눌 수 없습니다!"
-            return
-        }
-        resultString = "\(first) / \(second) = \(first/second)"
     }
 }
 

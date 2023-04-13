@@ -11,7 +11,7 @@ import Foundation
 
 struct ContentView: View {
     var body: some View {
-        let calculatorUseCase = CalculatorUseCase()
+        let calculatorUseCase = CalculatorUseCaseImpl()
         let viewModel = CalculatorViewModel(calculatorUseCase: calculatorUseCase)
         CalculatorView(viewModel : viewModel)
     }
@@ -55,7 +55,14 @@ struct CalculatorView: View {
     }
 }
 
-class CalculatorUseCase {
+protocol CalculatorUseCase {
+    func add(first: Int, second: Int) -> Int
+    func sub(first: Int, second: Int) -> Int
+    func multi(first: Int, second: Int) -> Int
+    func div(first: Int, second: Int) -> Int
+}
+
+class CalculatorUseCaseImpl: CalculatorUseCase {
     func add(first: Int, second: Int) -> Int {
         return first + second
     }
@@ -72,7 +79,6 @@ class CalculatorUseCase {
         return first / second
     }
 }
-
 
 class CalculatorViewModel: ObservableObject {
     @Published var firstNumber = ""

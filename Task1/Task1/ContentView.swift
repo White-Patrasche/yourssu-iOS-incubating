@@ -11,139 +11,139 @@ import Foundation
 import ComposableArchitecture
 
 struct ContentView: View {
-    var body: some View {
-        let calculatorUseCase = CalculatorUseCaseImpl()
-        let viewModel = CalculatorViewModel(calculatorUseCase: calculatorUseCase)
-        CalculatorView(viewModel : viewModel)
-    }
-}
-
-struct CalculatorView: View {
-    @ObservedObject var viewModel: CalculatorViewModel
+    let store: Store<CalculatorState, CalculatorAction>
     
-    func CalButton( text:String,  action:@escaping () -> Void) -> some View{
-        return Button(action: action) {
-            Text(text)
-                .font(.body)
-                .foregroundColor(.white)
-                .padding()
-                .frame(width: 300)
-                .background(RoundedRectangle(cornerRadius: 30).fill(Color.teal))
-        }
+    init() {
+        self.store = Store(initialState: CalculatorState(), reducer: calculatorReducer, environment: CalculatorEnvironment())
     }
     
     var body: some View {
-        VStack(spacing: 20) {
-            VStack(spacing: 10) {
-                TextField("첫번째 숫자를 입력해주세요", text: $viewModel.firstNumber)
-                    .padding()
-                    .background(RoundedRectangle(cornerRadius: 30).fill(Color.gray.opacity(0.1)))
-                    .frame(width: 300)
-                    .shadow(color: Color.black.opacity(0.3), radius: 5, x: 0, y: 2)
-                TextField("두번째 숫자를 입력해주세요", text: $viewModel.secondNumber)
-                    .padding()
-                    .background(RoundedRectangle(cornerRadius: 30).fill(Color.gray.opacity(0.1)))
-                    .frame(width: 300)
-            }
-            Text(viewModel.resultString)
-            VStack(spacing: 10) {
-                CalButton(text: "더하기", action: viewModel.add)
-                CalButton(text: "빼기", action: viewModel.sub)
-                CalButton(text: "곱하기", action: viewModel.multi)
-                CalButton(text: "나누기", action: viewModel.div)
-            }
-        }
+        CalculatorView(store: store)
     }
 }
 
-protocol CalculatorUseCase {
-    func add(first: Int, second: Int) -> Int
-    func sub(first: Int, second: Int) -> Int
-    func multi(first: Int, second: Int) -> Int
-    func div(first: Int, second: Int) -> Int
+struct CalculatorState: Equatable {
+    var firstNumber: String = ""
+    var secondNumber: String = ""
+    var resultString: String = "버튼을 눌러주세요!"
 }
 
-class CalculatorUseCaseImpl: CalculatorUseCase {
-    func add(first: Int, second: Int) -> Int {
-        return first + second
-    }
-    
-    func sub(first: Int, second: Int) -> Int {
-        return first - second
-    }
-    
-    func multi(first: Int, second: Int) -> Int {
-        return first * second
-    }
-    
-    func div(first: Int, second: Int) -> Int {
-        return first / second
-    }
+enum CalculatorAction: Equatable {
+    case firstNumberChanged(String)
+    case secondNumberChanged(String)
+    case add
+    case sub
+    case multi
+    case div
 }
 
-class CalculatorViewModel: ObservableObject {
-    @Published var firstNumber = ""
-    @Published var secondNumber = ""
-    @Published var resultString = "버튼을 눌러주세요!"
+struct CalculatorEnvironment {}
+
+let calculatorReducer = AnyReducer<CalculatorState, CalculatorAction, CalculatorEnvironment> {state, action, _ in switch action {
+case let .firstNumberChanged(number):
+    state.firstNumber = number
+    return .none
     
-    var calculatorUseCase: CalculatorUseCase
+case let .secondNumberChanged(number):
+    state.secondNumber = number
+    return .none
     
-    init(calculatorUseCase: CalculatorUseCase) {
-        self.calculatorUseCase = calculatorUseCase
+case .add:
+    if let first = Int(state.firstNumber), let second = Int(state.secondNumber) {
+        state.resultString = "\(first) + \(second) = \(first + second)"
+    } else {
+        state.resultString = "잘못된 입력입니다"
     }
-    
-    func validInput()-> Bool {
-        if(firstNumber == "" || secondNumber == "") {
-            resultString = "값을 먼저 입력해주세요"
-            return false
-        }
-        if (Int(firstNumber) == nil || Int(secondNumber) == nil) {
-            resultString = "잘못된 입력입니다"
-            return false
-        }
-        return true
+    return .none
+case .sub:
+    if let first = Int(state.firstNumber), let second = Int(state.secondNumber) {
+        state.resultString = "\(first) - \(second) = \(first - second)"
+    } else {
+        state.resultString = "잘못된 입력입니다"
     }
-    
-    func add() {
-        if validInput() {
-            let first =  Int(firstNumber) ?? 0
-            let second = Int(secondNumber) ?? 0
-            let result = calculatorUseCase.add(first: first, second: second)
-            resultString = "\(first) + \(second) = \(result)"
-        }
+    return .none
+case .multi:
+    if let first = Int(state.firstNumber), let second = Int(state.secondNumber) {
+        state.resultString = "\(first) * \(second) = \(first * second)"
+    } else {
+        state.resultString = "잘못된 입력입니다"
     }
-    
-    func sub() {
-        if validInput() {
-            let first =  Int(firstNumber) ?? 0
-            let second = Int(secondNumber) ?? 0
-            let result = calculatorUseCase.sub(first: first, second: second)
-            resultString = "\(first) - \(second) = \(result)"
+    return .none
+case .div:
+    if let first = Int(state.firstNumber), let second = Int(state.secondNumber) {
+        if second == 0 {
+            state.resultString = "0으로 나눌 수 없습니다!"
+        } else {
+            state.resultString = "\(first) / \(second) = \(first / second)"
         }
         
+    } else {
+        state.resultString = "잘못된 입력입니다"
     }
-    func multi() {
-        if validInput() {
-            let first =  Int(firstNumber) ?? 0
-            let second = Int(secondNumber) ?? 0
-            let result = calculatorUseCase.multi(first: first, second: second)
-            resultString = "\(first) * \(second) = \(result)"
-        }
-    }
-    func div() {
-        if validInput() {
-            let first =  Int(firstNumber) ?? 0
-            let second = Int(secondNumber) ?? 0
-            if(second == 0) {
-                resultString = "0으로 나눌 수 없습니다!"
-                return
+    return .none
+}}
+
+
+struct CalculatorView: View {
+    let store: Store<CalculatorState, CalculatorAction>
+    
+    var body: some View {
+        WithViewStore(self.store) {
+            viewStore in VStack(spacing: 20) {
+                VStack(spacing: 10) {
+                    TextField("첫번째 숫자를 입력해주세요", text: viewStore.binding(
+                        get:{$0.firstNumber},send:CalculatorAction.firstNumberChanged
+                    )).customTextFieldStyle()
+                    TextField("두번째 숫자를 입력해주세요", text: viewStore.binding(
+                        get:{$0.secondNumber},send:CalculatorAction.secondNumberChanged
+                    )).customTextFieldStyle()
+                }
+                Text(viewStore.resultString)
+                VStack(spacing: 10) {
+                    Button("더하기") {
+                        viewStore.send(.add)
+                    }.calButtonStyle()
+                    Button("빼기") {
+                        viewStore.send(.sub)
+                    }.calButtonStyle()
+                    Button("곱하기") {
+                        viewStore.send(.multi)
+                    }.calButtonStyle()
+                    Button("나누기") {
+                        viewStore.send(.div)
+                    }.calButtonStyle()
+                }
             }
-            let result = calculatorUseCase.div(first: first, second: second)
-            resultString = "\(first) / \(second) = \(result)"
         }
     }
 }
 
+extension View {
+    func customTextFieldStyle() -> some View {
+        self.modifier(CustomTextFieldStyle())
+    }
+}
+
+struct CustomTextFieldStyle: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .padding()
+            .background(RoundedRectangle(cornerRadius: 30).fill(Color.gray.opacity(0.1)))
+            .frame(width: 300)
+            .shadow(color: Color.black.opacity(0.3), radius: 5, x: 0, y: 2)
+    }
+}
+
+extension Button where Label == Text {
+    fileprivate func calButtonStyle() -> some View {
+        self
+            .font(.body)
+            .foregroundColor(.white)
+            .padding()
+            .frame(width: 300)
+            .background(RoundedRectangle(cornerRadius: 30).fill(Color.teal))
+    }
+}
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()

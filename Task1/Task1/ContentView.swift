@@ -120,13 +120,7 @@ struct CalculatorView: View {
 
 extension View {
     func customTextFieldStyle() -> some View {
-        self.modifier(CustomTextFieldStyle())
-    }
-}
-
-struct CustomTextFieldStyle: ViewModifier {
-    func body(content: Content) -> some View {
-        content
+        self
             .padding()
             .background(RoundedRectangle(cornerRadius: 30).fill(Color.gray.opacity(0.1)))
             .frame(width: 300)

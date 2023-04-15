@@ -14,7 +14,7 @@ struct ContentView: View {
     let store: Store<CalculatorState, CalculatorAction>
     
     init() {
-        self.store = Store(initialState: CalculatorState(), reducer: calculatorReducer, environment: CalculatorEnvironment())
+        self.store = Store(initialState: CalculatorState(), reducer: calculatorReducer, environment: CalculatorEnvironment(calculatorService: CalculatorServiceImpl()))
     }
     
     var body: some View {
@@ -37,9 +37,33 @@ enum CalculatorAction: Equatable {
     case div
 }
 
-struct CalculatorEnvironment {}
+struct CalculatorEnvironment {
+    let calculatorService: CalculatorService
+}
 
-let calculatorReducer = AnyReducer<CalculatorState, CalculatorAction, CalculatorEnvironment> {state, action, _ in switch action {
+protocol CalculatorService {
+    func add(_ first: Int, _ second: Int) -> Int
+    func subtract(_ first: Int, _ second: Int) -> Int
+    func multiply(_ first: Int, _ second: Int) -> Int
+    func divide(_ first: Int, _ second: Int) -> Int
+}
+
+struct CalculatorServiceImpl: CalculatorService {
+    func add(_ first: Int, _ second: Int) -> Int {
+        return first + second
+    }
+    func subtract(_ first: Int, _ second: Int) -> Int {
+        return first - second
+    }
+    func multiply(_ first: Int, _ second: Int) -> Int {
+        return first * second
+    }
+    func divide(_ first: Int, _ second: Int) -> Int {
+        return first / second
+    }
+}
+
+let calculatorReducer = AnyReducer<CalculatorState, CalculatorAction, CalculatorEnvironment> {state, action, environment in switch action {
 case let .firstNumberChanged(number):
     state.firstNumber = number
     return .none
@@ -50,21 +74,24 @@ case let .secondNumberChanged(number):
     
 case .add:
     if let first = Int(state.firstNumber), let second = Int(state.secondNumber) {
-        state.resultString = "\(first) + \(second) = \(first + second)"
+        let result = environment.calculatorService.add(first, second)
+        state.resultString = "\(first) + \(second) = \(result)"
     } else {
         state.resultString = "잘못된 입력입니다"
     }
     return .none
 case .sub:
     if let first = Int(state.firstNumber), let second = Int(state.secondNumber) {
-        state.resultString = "\(first) - \(second) = \(first - second)"
+        let result = environment.calculatorService.subtract(first, second)
+        state.resultString = "\(first) - \(second) = \(result)"
     } else {
         state.resultString = "잘못된 입력입니다"
     }
     return .none
 case .multi:
     if let first = Int(state.firstNumber), let second = Int(state.secondNumber) {
-        state.resultString = "\(first) * \(second) = \(first * second)"
+        let result = environment.calculatorService.multiply(first, second)
+        state.resultString = "\(first) * \(second) = \(result)"
     } else {
         state.resultString = "잘못된 입력입니다"
     }
@@ -74,7 +101,8 @@ case .div:
         if second == 0 {
             state.resultString = "0으로 나눌 수 없습니다!"
         } else {
-            state.resultString = "\(first) / \(second) = \(first / second)"
+            let result = environment.calculatorService.divide(first, second)
+            state.resultString = "\(first) / \(second) = \(result)"
         }
         
     } else {

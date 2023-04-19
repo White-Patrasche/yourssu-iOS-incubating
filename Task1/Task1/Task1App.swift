@@ -6,12 +6,20 @@
 //
 
 import SwiftUI
+import ComposableArchitecture
 
 @main
 struct Task1App: App {
+    let calculatorEnvironment = CalculatorEnvironment(calculatorService: CalculatorServiceImpl())
+    let calculatorStore: Store<CalculatorState, CalculatorAction>
+    
+    init() {
+        self.calculatorStore = Store(initialState: CalculatorState(), reducer: calculatorReducer, environment: calculatorEnvironment)
+    }
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView(environment: calculatorEnvironment)
         }
     }
 }

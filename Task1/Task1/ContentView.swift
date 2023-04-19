@@ -11,8 +11,13 @@ import ComposableArchitecture
 struct ContentView: View {
     let store: Store<CalculatorState, CalculatorAction>
     
-    init() {
-        self.store = Store(initialState: CalculatorState(), reducer: calculatorReducer, environment: CalculatorEnvironment(calculatorService: CalculatorServiceImpl()))
+    let calculatorReducer : AnyReducer<CalculatorState, CalculatorAction, CalculatorEnvironment>
+    
+    
+    init(environment: CalculatorEnvironment) {
+        
+        self.store = Store(initialState: CalculatorState(), reducer: calculatorReducer, environment: environment)
+        
     }
     
     var body: some View {
@@ -175,10 +180,10 @@ extension Button where Label == Text {
             .background(RoundedRectangle(cornerRadius: 30).fill(Color.teal))
     }
 }
+
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        let environment = CalculatorEnvironment(calculatorService: CalculatorServiceImpl())
+        return ContentView(environment: environment)
     }
 }
-
-

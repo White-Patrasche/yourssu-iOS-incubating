@@ -19,7 +19,8 @@ struct Task1App: App {
     
     var body: some Scene {
         WindowGroup {
-            ContentView(environment: calculatorEnvironment)
+            ContentView(store: calculatorStore)
         }
     }
 }
+

@@ -12,6 +12,7 @@
 		AF22C7DB29D08123009BFC2B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AF22C7DA29D08123009BFC2B /* Assets.xcassets */; };
 		AF22C7DE29D08123009BFC2B /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AF22C7DD29D08123009BFC2B /* Preview Assets.xcassets */; };
 		AF903EE129E85D9900DFA960 /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = AF903EE029E85D9900DFA960 /* ComposableArchitecture */; };
+		AFC96C5D29FCF9500049597B /* CalculatorReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFC96C5C29FCF9500049597B /* CalculatorReducer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -20,6 +21,7 @@
 		AF22C7D829D08121009BFC2B /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		AF22C7DA29D08123009BFC2B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AF22C7DD29D08123009BFC2B /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		AFC96C5C29FCF9500049597B /* CalculatorReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculatorReducer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,6 +59,7 @@
 				AF22C7D829D08121009BFC2B /* ContentView.swift */,
 				AF22C7DA29D08123009BFC2B /* Assets.xcassets */,
 				AF22C7DC29D08123009BFC2B /* Preview Content */,
+				AFC96C5C29FCF9500049597B /* CalculatorReducer.swift */,
 			);
 			path = Task1;
 			sourceTree = "<group>";
@@ -145,6 +148,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AFC96C5D29FCF9500049597B /* CalculatorReducer.swift in Sources */,
 				AF22C7D929D08121009BFC2B /* ContentView.swift in Sources */,
 				AF22C7D729D08121009BFC2B /* Task1App.swift in Sources */,
 			);

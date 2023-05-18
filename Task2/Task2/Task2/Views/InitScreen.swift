@@ -7,29 +7,12 @@
 
 import SwiftUI
 
-class MemoListViewModel: ObservableObject {
-    @Published var memos: [Memo] = []
-    private let addMemoUseCase: AddMemoUseCase
-    private let memoRepository: MemoRepository
-    
-    init(addMemoUseCase: AddMemoUseCase, memoRepository: MemoRepository) {
-        self.addMemoUseCase = addMemoUseCase
-        self.memoRepository = memoRepository
-    }
-    
-    func addMemo(title: String, content: String) {
-        addMemoUseCase.execute(title: title, content: content)
-        self.memos = memoRepository.getMemos()
-    }
-}
-
-
 struct InitScreen: View {
-    @EnvironmentObject private var memoList: MemoListViewModel
+    @StateObject var memoListViewModel: MemoListViewModel
     
     var body: some View {
         VStack {
-            if memoList.memos.isEmpty {
+            if memoListViewModel.memos.isEmpty {
                 VStack {
                     Text("메모가 없습니다.")
                         .foregroundColor(TEXTCOLOR)
@@ -37,7 +20,7 @@ struct InitScreen: View {
                         .foregroundColor(TEXTCOLOR)
                 }
             } else {
-                List(memoList.memos) { memo in
+                List(memoListViewModel.memos) { memo in
                     NavigationLink(destination: MemoDetailView(
                         memo: memo)) {
                             VStack(alignment: .leading) {
@@ -57,7 +40,7 @@ struct InitScreen: View {
         .customNavigationTitle(title: "메모 목록")
         .navigationBarItems(
             trailing:
-                NavigationLink(destination: EditMemoScreen(viewModel: EditMemoScreenViewModel()).environmentObject(memoList)) {
+                NavigationLink(destination: EditMemoScreen(memoListViewModel: memoListViewModel)) {
                     Image(systemName: "plus")
                 }
         )

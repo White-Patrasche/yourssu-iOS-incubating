@@ -18,6 +18,7 @@
 		AF4862F12A14B6D0003B8DE1 /* Memo.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4862F02A14B6D0003B8DE1 /* Memo.swift */; };
 		AF4862F32A14B733003B8DE1 /* InitScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4862F22A14B733003B8DE1 /* InitScreen.swift */; };
 		AF4862F62A14B76E003B8DE1 /* Repository.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4862F52A14B76E003B8DE1 /* Repository.swift */; };
+		AF962DF42A16091B0061157B /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF962DF32A16091B0061157B /* ViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +35,7 @@
 		AF4862F02A14B6D0003B8DE1 /* Memo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Memo.swift; sourceTree = "<group>"; };
 		AF4862F22A14B733003B8DE1 /* InitScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitScreen.swift; sourceTree = "<group>"; };
 		AF4862F52A14B76E003B8DE1 /* Repository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Repository.swift; sourceTree = "<group>"; };
+		AF962DF32A16091B0061157B /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,10 +68,11 @@
 		AF23EB9A2A036C3300C8CBCC /* Task2 */ = {
 			isa = PBXGroup;
 			children = (
+				AF962DF22A16090C0061157B /* ViewModels */,
 				AF4862F42A14B757003B8DE1 /* Repositories */,
 				AF4862EF2A14B6C6003B8DE1 /* Models */,
 				AF4862EA2A14B66E003B8DE1 /* UseCases */,
-				AF4862E72A14B542003B8DE1 /* Screens */,
+				AF4862E72A14B542003B8DE1 /* Views */,
 				AF4862E52A14B428003B8DE1 /* Utils.swift */,
 				AF23EB9B2A036C3300C8CBCC /* Task2App.swift */,
 				AF23EB9D2A036C3300C8CBCC /* ContentView.swift */,
@@ -88,14 +91,14 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
-		AF4862E72A14B542003B8DE1 /* Screens */ = {
+		AF4862E72A14B542003B8DE1 /* Views */ = {
 			isa = PBXGroup;
 			children = (
 				AF4862E32A146C72003B8DE1 /* EditMemo.swift */,
 				AF4862E82A14B59F003B8DE1 /* MemoDetail.swift */,
 				AF4862F22A14B733003B8DE1 /* InitScreen.swift */,
 			);
-			path = Screens;
+			path = Views;
 			sourceTree = "<group>";
 		};
 		AF4862EA2A14B66E003B8DE1 /* UseCases */ = {
@@ -120,6 +123,14 @@
 				AF4862F52A14B76E003B8DE1 /* Repository.swift */,
 			);
 			path = Repositories;
+			sourceTree = "<group>";
+		};
+		AF962DF22A16090C0061157B /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				AF962DF32A16091B0061157B /* ViewModel.swift */,
+			);
+			path = ViewModels;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -196,6 +207,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AF962DF42A16091B0061157B /* ViewModel.swift in Sources */,
 				AF4862F12A14B6D0003B8DE1 /* Memo.swift in Sources */,
 				AF4862E42A146C72003B8DE1 /* EditMemo.swift in Sources */,
 				AF23EB9E2A036C3300C8CBCC /* ContentView.swift in Sources */,

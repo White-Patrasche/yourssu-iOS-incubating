@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct InitScreen: View {
-    @StateObject var memoListViewModel: MemoListViewModel
+    @ObservedObject var memoListViewModel: MemoListViewModel
     
     var body: some View {
         VStack {

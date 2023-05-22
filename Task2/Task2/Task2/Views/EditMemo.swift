@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct EditMemoScreen: View {
-    @StateObject var memoListViewModel: MemoListViewModel
+    @ObservedObject var memoListViewModel: MemoListViewModel
     @Environment(\.presentationMode) var presentationMode
     
     var body: some View {
